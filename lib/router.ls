@@ -52,7 +52,7 @@ class Router
                 method-list
             ]
 
-    route: (ctx) !->
+    route: (ctx, static-re, static-server) !->
         self = @
         if ctx.req.method is \POST
             body = ''
@@ -62,6 +62,9 @@ class Router
         param-re = /:[^\/]+/g
         pathname = url.parse ctx.req.url .pathname
         pathname = if pathname.char-at(pathname.length - 1) is \/ then pathname else pathname + \/
+        if static-re and pathname.match static-re
+            static-server.serve ctx.req, ctx.resp
+            return
         matched = false
         for item in @handler-list
             [pattern, handler, method-list] = item

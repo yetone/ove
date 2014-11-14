@@ -1,6 +1,8 @@
 Ove = require '../..'
 app = new Ove
 
+app.static \./public
+
 app.use (ctx, next) ->
     console.log \md0
     next!
