@@ -1,5 +1,9 @@
 module.exports = do
-    log: (str) ->
-        console.log str
-    error: (str) ->
-        console.error str
+    log: ->
+        console.log ...
+
+    info: ->
+        console.info ...
+
+    error: ->
+        console.error ...

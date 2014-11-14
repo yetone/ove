@@ -2,6 +2,7 @@ require! {
     http
     \./router
     \./context
+    \./logger
     \node-static
 }
 
@@ -61,8 +62,9 @@ class Ove
 
         do
             <- @server.listen port, host
-            console.log "Ove app started.\n
-                Listening: %s:%d"
+            logger.log "Ove app started.\n
+                Listening %s:%d"
                 , host, port
 
-module.exports = Ove
+module.exports = ->
+    new Ove ...

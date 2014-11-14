@@ -1,5 +1,5 @@
-Ove = require '../..'
-app = new Ove
+ove = require '../..'
+app = ove!
 
 app.static \/public/ \./public
 
