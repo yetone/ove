@@ -15,6 +15,7 @@ class Context
         @resp = resp
         url-obj = url.parse req.url
         @url = req.url
+        @method = req.method
         @search = url-obj.search
         @query = url-obj.query
         @pathname = url-obj.pathname
