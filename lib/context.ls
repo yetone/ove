@@ -4,6 +4,11 @@ require! {
     \./utils
 }
 
+status-map = do
+    404: 'Not found.'
+    405: 'Method not allowed.'
+    502: 'Server Error.'
+
 class Context
     (req, resp) ->
         @req = req
@@ -23,7 +28,7 @@ class Context
 
     set-header: (key, value) !->
         obj = {}
-        if typeof! obj is not \Object
+        if typeof! key is not \Object
             obj[key] = value
         else
             obj = key
@@ -49,5 +54,8 @@ class Context
     html: (str) !->
         @set-header \Content-Type, 'text/html; charset=' + @_resp-charset
         @send str
+
+    send-status: (status-code) !->
+        @send status-code, that if status-map[status-code]
 
 module.exports = Context
