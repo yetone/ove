@@ -4,15 +4,17 @@
   Ove = require('../..');
   app = new Ove;
   app['static']('/public/', './public');
-  app.use(function(ctx, next){
-    console.log('md0');
+  app.use(function(next){
+    console.log('md0', this.url);
     return next();
   });
-  app.use(function(ctx, next){
-    console.log('md1');
+  app.use(function(next){
+    console.log('md1', this.url);
     return next();
   });
   app.get('/test/', function(){
+    this.setCookie('love', 'you');
+    console.log(this.cookies);
     return this.send('hello world');
   });
   app.post('/foo/:name/bar/:age/', function(){

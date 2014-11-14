@@ -33,3 +33,11 @@ module.exports = do
             res[k.trim!] = v
         res
 
+    encode-str: (token, str) ->
+        #TODO
+        token + str
+
+    decode-str: (token, str) ->
+        #TODO
+        str
+

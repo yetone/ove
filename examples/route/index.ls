@@ -3,15 +3,17 @@ app = new Ove
 
 app.static \/public/ \./public
 
-app.use (ctx, next) ->
-    console.log \md0
+app.use (next) ->
+    console.log \md0 @url
     next!
 
-app.use (ctx, next) ->
-    console.log \md1
+app.use (next) ->
+    console.log \md1 @url
     next!
 
 app.get \/test/ ->
+    @set-cookie \love \you
+    console.log @cookies
     @send 'hello world'
 
 app.post \/foo/:name/bar/:age/ ->

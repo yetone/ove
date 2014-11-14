@@ -22,23 +22,24 @@ class Ove
             throw new Error 'ove.use() expect a Function argument'
         idx = @middlewares.length + 1
         self = @
-        @middlewares.push (ctx, last) !->
-            func ctx, ->
+        @middlewares.push (last) !->
+            ctx = @
+            func.call ctx, ->
                 if self.middlewares[idx]
-                    that ctx, last
+                    that.call ctx, last
                 else
-                    last ctx
+                    last.call ctx
 
     static: (pattern, path, opt) ->
         @static-server = new node-static.Server path, opt
         pattern = if pattern.char-at(pattern.length - 1) is \/ then pattern else pattern + \/
         @static-re = new RegExp \^ + pattern.replace /\//g '\\/'
         self = @
-        @use (ctx, next) !->
-            if not ctx.req.url.match self.static-re
+        @use (next) !->
+            if not @req.url.match self.static-re
                 next!
-            ctx.req.url .= replace self.static-re, ''
-            self.static-server.serve ctx.req, ctx.resp
+            @req.url .= replace self.static-re, ''
+            self.static-server.serve @req, @resp
 
     listen: (...args) ->
         [port, host] = args
@@ -54,7 +55,7 @@ class Ove
             ctx = new context.Context req, resp
             self.config.charset and ctx.set-charset self.config.charset
             if self.middlewares[0]
-                that ctx, -> self.router.route ctx
+                that.call ctx, -> self.router.route ctx
             else
                 self.router.route ctx
 
