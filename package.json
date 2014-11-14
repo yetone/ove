@@ -1,6 +1,6 @@
 {
   "name": "ove",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A web framework",
   "main": "index.js",
   "repository": {
@@ -20,8 +20,12 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "voe",
-    "framework"
+    "ove",
+    "web",
+    "http",
+    "application",
+    "framework",
+    "middleware"
   ],
   "author": "yetone <i@yetone.net>",
   "license": "MIT"
