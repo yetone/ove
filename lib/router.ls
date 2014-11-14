@@ -55,10 +55,10 @@ class Router
     route: (ctx) !->
         self = @
         if ctx.req.method is \POST
-            body = ''
+            ctx.body = ''
             do
                 data <- ctx.req.on \data
-                body += data
+                ctx.body += data
         param-re = /:[^\/]+/g
         pathname = url.parse ctx.req.url .pathname
         pathname = if pathname.char-at(pathname.length - 1) is \/ then pathname else pathname + \/
@@ -88,7 +88,7 @@ class Router
             if ctx.req.method is \POST
                 do
                     <- ctx.req.on \end
-                    ctx.form = utils.query-str-to-obj body
+                    ctx.form = utils.query-str-to-obj ctx.body
                     handler.call ctx
                 return
             handler.call ctx

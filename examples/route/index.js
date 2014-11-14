@@ -18,6 +18,7 @@
     return this.send('hello world');
   });
   app.post('/foo/:name/bar/:age/', function(){
+    console.log(this.body);
     console.log(this.params);
     return this.json(this.form);
   });
