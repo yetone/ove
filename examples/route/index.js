@@ -3,7 +3,7 @@
   var Ove, app;
   Ove = require('../..');
   app = new Ove;
-  app['static']('./public');
+  app['static']('/public/', './public');
   app.use(function(ctx, next){
     console.log('md0');
     return next();

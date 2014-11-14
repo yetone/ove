@@ -52,7 +52,7 @@ class Router
                 method-list
             ]
 
-    route: (ctx, static-re, static-server) !->
+    route: (ctx) !->
         self = @
         if ctx.req.method is \POST
             body = ''
@@ -62,9 +62,7 @@ class Router
         param-re = /:[^\/]+/g
         pathname = url.parse ctx.req.url .pathname
         pathname = if pathname.char-at(pathname.length - 1) is \/ then pathname else pathname + \/
-        if static-re and pathname.match static-re
-            static-server.serve ctx.req, ctx.resp
-            return
+
         matched = false
         for item in @handler-list
             [pattern, handler, method-list] = item
@@ -72,11 +70,11 @@ class Router
                 throw new Error 'The router pattern is error: ' + pattern
             param-names = if pattern.match param-re then that.map -> it.slice(1) else []
             pattern = if pattern.char-at(pattern.length - 1) is \/ then pattern else pattern + \/
-            pattern = \^ + pattern + '$'
-            pattern = pattern.replace param-re, '([^\/]+)'
-                            .replace /\*/g '[^\\/]*'
-                            .replace /\*\*/g '.*'
-                            .replace /\//g '\\/'
+            pattern = \^ + pattern + \$
+            pattern .= replace param-re, '([^\/]+)'
+                .replace /\*/g '[^\\/]*'
+                .replace /\*\*/g '.*'
+                .replace /\//g '\\/'
 
             re = new RegExp pattern
             m-arr = pathname.match re

@@ -29,12 +29,16 @@ class Ove
                 else
                     last ctx
 
-    static: (path, opt) ->
+    static: (pattern, path, opt) ->
         @static-server = new node-static.Server path, opt
-        path = if path.char-at(0) is \. then path.slice(1) else path
-        path = if path.char-at(0) is \/ then path else \/ + path
-        path = if path.char-at(path.length - 1) is \/ then path else path + \/
-        @static-re = new RegExp \^ + path.replace /\//g '\\/'
+        pattern = if pattern.char-at(pattern.length - 1) is \/ then pattern else pattern + \/
+        @static-re = new RegExp \^ + pattern.replace /\//g '\\/'
+        self = @
+        @use (ctx, next) !->
+            if not ctx.req.url.match self.static-re
+                next!
+            ctx.req.url .= replace self.static-re, ''
+            self.static-server.serve ctx.req, ctx.resp
 
     listen: (...args) ->
         [port, host] = args
@@ -50,9 +54,9 @@ class Ove
             ctx = new context.Context req, resp
             self.config.charset and ctx.set-charset self.config.charset
             if self.middlewares[0]
-                that ctx, -> self.router.route ctx, self.static-re, self.static-server
+                that ctx, -> self.router.route ctx
             else
-                self.router.route ctx, self.static-re, self.static-server
+                self.router.route ctx
 
         do
             <- @server.listen port, host
