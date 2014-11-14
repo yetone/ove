@@ -23,6 +23,7 @@ class Context
         @cookies = utils.parse-cookie req.headers.cookie
         @params = {}
         @form = {}
+        @body = ''
         @_resp-headers = {}
         @_resp-cookies = {}
         @_resp-charset = \UTF-8
