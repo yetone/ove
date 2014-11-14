@@ -10,7 +10,7 @@ get-pattern-list = ->
 
 class Router
     ->
-        @method-list = [\GET \POST \PUT \DELETE \PATCH]
+        @method-list = <[ GET POST PUT DELETE PATCH ]>
         @handler-list = []
 
         self = @
