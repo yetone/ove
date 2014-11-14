@@ -6,11 +6,14 @@ require! {
 
 class Ove
     ->
+        @config = {}
         @server = http.create-server!
         @router = new router
 
         for name in <[ register get post put delete patch ]>
             this[name] = @router[name]
+
+    config: (obj) ->
 
     listen: (...args) ->
         [port, host] = args

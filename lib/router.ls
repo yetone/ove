@@ -59,21 +59,21 @@ class Router
             do
                 data <- ctx.req.on \data
                 body += data
-        param-re = //:[^\/]+//g
+        param-re = /:[^\/]+/g
         pathname = url.parse ctx.req.url .pathname
         pathname = if pathname.char-at(pathname.length - 1) is \/ then pathname else pathname + \/
         matched = false
         for item in @handler-list
             [pattern, handler, method-list] = item
-            if pattern.replace //[\/\w:\*]//g ''
+            if pattern.replace /[\/\w:\*]/g ''
                 throw new Error 'The router pattern is error: ' + pattern
             param-names = if pattern.match param-re then that.map -> it.slice(1) else []
             pattern = if pattern.char-at(pattern.length - 1) is \/ then pattern else pattern + \/
             pattern = \^ + pattern + '$'
             pattern = pattern.replace param-re, '([^\/]+)'
-                            .replace //\*//g '[^\\/]*'
-                            .replace //\*\*//g '.*'
-                            .replace //\///g '\\/'
+                            .replace /\*/g '[^\\/]*'
+                            .replace /\*\*/g '.*'
+                            .replace /\//g '\\/'
 
             re = new RegExp pattern
             m-arr = pathname.match re
