@@ -1,7 +1,7 @@
 require! {
     http
-    \./router
-    \./context
+    './router': {Router}
+    './context': {Context}
     \./logger
     \node-static
 }
@@ -11,7 +11,7 @@ class Ove
         @config = {}
         @middlewares = []
         @server = http.create-server!
-        @router = new router.Router
+        @router = new Router
 
         for name in <[ register get post put delete patch ]>
             this[name] = @router[name]
@@ -53,7 +53,7 @@ class Ove
 
         do
             (req, resp) <- @server.on \request
-            ctx = new context.Context req, resp
+            ctx = new Context req, resp
             self.config.charset and ctx.set-charset self.config.charset
             if self.middlewares[0]
                 that.call ctx, -> self.router.route ctx
