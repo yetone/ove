@@ -1,6 +1,14 @@
 Ove = require '../..'
 app = new Ove
 
+app.use (ctx, next) ->
+    console.log \md0
+    next!
+
+app.use (ctx, next) ->
+    console.log \md1
+    next!
+
 app.get \/test/ ->
     @send 'hello world'
 

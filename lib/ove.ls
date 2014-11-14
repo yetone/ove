@@ -2,18 +2,35 @@ require! {
     http
     \./router
     \./context
+    \node-static
 }
 
 class Ove
     ->
         @config = {}
+        @middlewares = []
         @server = http.create-server!
-        @router = new router
+        @router = new router.Router
 
         for name in <[ register get post put delete patch ]>
             this[name] = @router[name]
 
-    config: (obj) ->
+    config: (@config) ->
+
+    use: (func) ->
+        if typeof! func is not \Function
+            throw new Error 'ove.use() expect a Function argument'
+        idx = @middlewares.length + 1
+        self = @
+        @middlewares.push (ctx, last) !->
+            func ctx, ->
+                if self.middlewares[idx]
+                    that ctx, last
+                else
+                    last ctx
+
+    static: (path, opt) ->
+        @fileServer = new node-static.Server path, opt
 
     listen: (...args) ->
         [port, host] = args
@@ -26,8 +43,12 @@ class Ove
 
         do
             (req, resp) <- @server.on \request
-            ctx = new context req, resp
-            self.router.route ctx
+            ctx = new context.Context req, resp
+            self.config.charset and ctx.set-charset self.config.charset
+            if self.middlewares[0]
+                that ctx, -> self.router.route ctx
+            else
+                self.router.route ctx
 
         do
             <- @server.listen port, host

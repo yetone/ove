@@ -7,6 +7,7 @@
     "example": "examples"
   },
   "dependencies": {
+    "node-static": "^0.7.6",
     "prelude-ls": "^1.1.1"
   },
   "devDependencies": {},

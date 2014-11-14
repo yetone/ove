@@ -3,6 +3,14 @@
   var Ove, app;
   Ove = require('../..');
   app = new Ove;
+  app.use(function(ctx, next){
+    console.log('md0');
+    return next();
+  });
+  app.use(function(ctx, next){
+    console.log('md1');
+    return next();
+  });
   app.get('/test/', function(){
     return this.send('hello world');
   });

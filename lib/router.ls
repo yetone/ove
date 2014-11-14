@@ -97,4 +97,4 @@ class Router
         else
             ctx.send-status 404
 
-module.exports = Router
+exports.Router = Router

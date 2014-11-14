@@ -26,6 +26,8 @@ class Context
         @_resp-headers = {}
         @_resp-charset = \UTF-8
 
+    set-charset: (@_resp-charset) !->
+
     set-header: (key, value) !->
         obj = {}
         if typeof! key is not \Object
@@ -58,4 +60,4 @@ class Context
     send-status: (status-code) !->
         @send status-code, that if status-map[status-code]
 
-module.exports = Context
+exports.Context = Context
