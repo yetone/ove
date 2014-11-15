@@ -1,8 +1,8 @@
 {
   "name": "ove",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A powerful web framework",
-  "main": "index.js",
+  "main": "lib/ove.js",
   "repository": {
     "type": "git",
     "url": "git@github.com:yetone/ove.git"
