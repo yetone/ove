@@ -25,7 +25,7 @@ class Context
         @params = {}
         @form = {}
         @body = ''
-        @ip = req.headers[\X-Forwarded-For] || req.connection.remote-address
+        @ip = (req.headers[\x-forwarded-for] or '').split \, .0 or req.connection.remote-address
         @_resp-headers = {}
         @_resp-cookies = {}
         @_resp-charset = \UTF-8
