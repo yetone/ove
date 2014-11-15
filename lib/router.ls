@@ -76,7 +76,7 @@ class Router
             if ctx.req.method not in method-list
                 continue
             for name, idx in param-names
-                ctx.params[name] = m-arr[++idx]
+                ctx.params[name] = decodeURIComponent m-arr[++idx]
             if ctx.req.method is \POST
                 do
                     <- ctx.req.on \end
