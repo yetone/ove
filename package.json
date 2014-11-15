@@ -1,6 +1,6 @@
 {
   "name": "ove",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A web framework",
   "main": "index.js",
   "repository": {
