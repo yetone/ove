@@ -1,4 +1,7 @@
-require! \./utils
+require! {
+    \./logger
+    \./utils
+}
 
 exports.Request = do
     get-cookie: (key, dft) ->

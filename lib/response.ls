@@ -1,4 +1,12 @@
-require! \./utils
+require! {
+    \./logger
+    \./utils
+}
+
+status-map = do
+    404: 'Not found.'
+    405: 'Method not allowed.'
+    502: 'Server Error.'
 
 exports.Response = do
     set-charset: (@_resp-charset) !->

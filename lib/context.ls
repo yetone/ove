@@ -2,14 +2,8 @@ require! {
     url
     './request': {Request}
     './response': {Response}
-    \./logger
     \./utils
 }
-
-status-map = do
-    404: 'Not found.'
-    405: 'Method not allowed.'
-    502: 'Server Error.'
 
 class Context implements Request, Response
     (req, resp, config = {}, g = {}) ->
