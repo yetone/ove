@@ -3,38 +3,30 @@
   var ove, app;
   ove = require('../..');
   app = ove();
-  app['static']('/public/', './public');
-  app.use(function(next){
+  app['static']('/public/', './public').use(function(next){
     console.log('md0', this.url);
     return next();
-  });
-  app.use(function(next){
+  }).use(function(next){
     console.log('md1', this.url);
     return next();
-  });
-  app.registerStatus(404, function(){
+  }).registerStatus(404, function(){
     return this.send('ooooooooooooooh, noooooooooooooo!');
-  });
-  app.get('/test/', function(){
+  }).get('/test/', function(){
     this.setCookie('love', 'you');
     console.log('cookies:', this.cookies, '\n');
     console.log('headers:', this.headers, '\n');
     console.log('ip:', this.ip, '\n');
     this.setSecureCookie('miss', this.queryParams.miss || 'home');
     return this.send('hello world');
-  });
-  app.get('/user/:uid/', function(){
+  }).get('/user/:uid/', function(){
     var cookie;
     cookie = this.getSecureCookie('miss', 'nothing');
     return this.send('hello ' + this.params.uid + ', miss ' + cookie);
-  });
-  app.get('/redirect/', function(){
+  }).get('/redirect/', function(){
     return this.redirect('/user/yetone/');
-  });
-  app.post('/foo/:name/bar/:age/', function(){
+  }).post('/foo/:name/bar/:age/', function(){
     console.log(this.body);
     console.log(this.params);
     return this.json(this.form);
-  });
-  app.listen();
+  }).listen();
 }).call(this);

@@ -19,8 +19,9 @@ class Ove
         for name in <[ register get post put delete patch head options ]>
             this[name] = @router[name]
 
-    config: (obj) !->
+    config: (obj) ->
         @config <<< obj
+        @
 
     use: (func) ->
         if typeof! func is not \Function
@@ -34,6 +35,7 @@ class Ove
                     that.call ctx, last
                 else
                     last.call ctx
+        @
 
     static: (pattern, path, opt) ->
         @static-server = new node-static.Server path, opt
@@ -45,11 +47,13 @@ class Ove
                 next!
             @req.url .= replace self.static-re, ''
             self.static-server.serve @req, @resp
+        @
 
     register-status: (status-code, handler) ->
         if not @config.status-handler-map
             @config.status-handler-map = {}
         @config.status-handler-map[status-code] = handler
+        @
 
     listen: (...args) ->
         [port, host] = args
@@ -74,6 +78,7 @@ class Ove
             logger.log "Ove app started.\n
                 Listening %s:%d"
                 , host, port
+        @
 
 module.exports = ->
     new Ove ...

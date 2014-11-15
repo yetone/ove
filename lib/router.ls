@@ -17,12 +17,13 @@ class Router
 
         for name in @method-list
             ((name) ->
-                self[name.to-lower-case!] = (...args) !->
+                self[name.to-lower-case!] = (...args) ->
                     args.push([name.to-upper-case!])
                     self.register.apply self, args
+                    @
             ) name
 
-    register: (pattern, handler, method-list) !~>
+    register: (pattern, handler, method-list) ->
         arr = []
         switch typeof! pattern
             | \Array => arr = pattern
@@ -65,6 +66,7 @@ class Router
                 method-list
                 param-names
             ]
+            @
 
     route: (ctx) !->
         self = @
