@@ -8,7 +8,9 @@ require! {
 
 class Ove
     ->
-        @config = {}
+        @config = do
+            cookie-expires: 30
+            cookie-secure-token: \ove
         @g = {}
         @middlewares = []
         @server = http.create-server!
@@ -17,7 +19,8 @@ class Ove
         for name in <[ register get post put delete patch ]>
             this[name] = @router[name]
 
-    config: (@config) ->
+    config: (obj) !->
+        @config <<< obj
 
     use: (func) ->
         if typeof! func is not \Function

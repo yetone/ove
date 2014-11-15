@@ -11,11 +11,12 @@ status-map = do
 
 class Context
     (req, resp, config = {}, g = {}) ->
+        url-obj = url.parse req.url
+
         @req = req
         @resp = resp
         @config = config
         @g = g
-        url-obj = url.parse req.url
         @url = req.url
         @method = req.method
         @search = url-obj.search
@@ -42,14 +43,22 @@ class Context
         @_resp-headers <<< obj
 
     set-cookie: (key, value, opt) !->
-        opt = do
+        dft = do
             path: \/
-            expires: 30
+            expires: @config.cookie-expires
             domain: undefined
             http-only: true
             secure: false
             overwrite: false
-        <<< opt
+        switch typeof! opt
+            | \Number =>
+                opt = dft <<< do
+                    expires: opt
+            | \Object =>
+                opt = dft <<< opt
+            | _ =>
+                opt = dft
+
         header = key + '=' + value
         if opt.path
             header += '; path=' + opt.path
@@ -66,11 +75,14 @@ class Context
         @_resp-cookies[key] = header
 
     set-secure-cookie: (key, value, opt) !->
-        opt = do
-            expires: 30
-        <<< opt
-        value = [value.length, utils.base64.encode(value), Date.now! + opt.expires * 60 * 60 * 24]
-        signature = utils.hex-hmac-sha1 value.join \|, @config.cookie-secure-token
+        expires = @config.cookie-expires
+        switch typeof! opt
+            | \Number =>
+                expires = opt
+            | \Object =>
+                expires = opt.expires or expires
+        value = [value.length, utils.base64.encode(value), Date.now! + expires * 60 * 60 * 24]
+        signature = utils.hex-hmac-sha1 (value.join \|), @config.cookie-secure-token
 
         value.push signature
         value .= join \| .replace /\=/g \*
@@ -105,7 +117,7 @@ class Context
 
 
     send: (status-code, content) !->
-        if not content
+        unless typeof! status-code is \Number
             [status-code, content] = [200, status-code]
         cookie-acc = []
         for _, item of @_resp-cookies
@@ -116,7 +128,7 @@ class Context
         @resp.end content
 
     json: (status-code, obj) !->
-        if not obj
+        unless typeof! status-code is \Number
             [status-code, obj] = [200, status-code]
         @set-header \Content-Type, 'application/json; charset=' + @_resp-charset
         try
@@ -128,15 +140,14 @@ class Context
         @send status-code, str
 
     html: (status-code, str) !->
-        if not str
+        unless typeof! status-code is \Number
             [status-code, str] = [200, status-code]
         @set-header \Content-Type, 'text/html; charset=' + @_resp-charset
         @send status-code, str
 
     redirect: (url) !->
-        @resp.write-head 302 do
-            'Location': url
-        @resp.end!
+        @set-header \Location url
+        @send 302
 
     send-status: (status-code) !->
         if @config.status-handler-map?[status-code]
