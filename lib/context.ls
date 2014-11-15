@@ -25,6 +25,7 @@ class Context
         @params = {}
         @form = {}
         @body = ''
+        @ip = req.headers[\X-Forwarded-For] || req.connection.remote-address
         @_resp-headers = {}
         @_resp-cookies = {}
         @_resp-charset = \UTF-8
@@ -95,6 +96,11 @@ class Context
             [status-code, str] = [200, status-code]
         @set-header \Content-Type, 'text/html; charset=' + @_resp-charset
         @send status-code, str
+
+    redirect: (url) !->
+        @resp.write-head 302 do
+            'Location': url
+        @resp.end!
 
     send-status: (status-code) !->
         @send status-code, that if status-map[status-code]

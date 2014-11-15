@@ -13,8 +13,16 @@ app.use (next) ->
 
 app.get \/test/ ->
     @set-cookie \love \you
-    console.log @cookies
+    console.log \cookies:, @cookies, \\n
+    console.log \headers:, @headers, \\n
+    console.log \ip:, @ip, \\n
     @send 'hello world'
+
+app.get \/user/:uid/ ->
+    @send 'hello ' + @params.uid
+
+app.get \/redirect/ ->
+    @redirect \/user/yetone/
 
 app.post \/foo/:name/bar/:age/ ->
     console.log @body

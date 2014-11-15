@@ -14,8 +14,16 @@
   });
   app.get('/test/', function(){
     this.setCookie('love', 'you');
-    console.log(this.cookies);
+    console.log('cookies:', this.cookies, '\n');
+    console.log('headers:', this.headers, '\n');
+    console.log('ip:', this.ip, '\n');
     return this.send('hello world');
+  });
+  app.get('/user/:uid/', function(){
+    return this.send('hello ' + this.params.uid);
+  });
+  app.get('/redirect/', function(){
+    return this.redirect('/user/yetone/');
   });
   app.post('/foo/:name/bar/:age/', function(){
     console.log(this.body);
