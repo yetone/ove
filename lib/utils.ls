@@ -11,7 +11,10 @@ module.exports = do
             if kv-lst.length is not 2
                 continue
             [k, v] = kv-lst
-            res[k.trim!] = decodeURIComponent v
+            try
+                res[k.trim!] = decodeURIComponent v
+            catch
+                res[k.trim!] = v
         res
 
     obj-to-query-str: (obj) ->
