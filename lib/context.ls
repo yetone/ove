@@ -67,19 +67,20 @@ class Context
             value = utils.encode-str that, value
         @set-cookie key, value, opt
 
-    send: (...args) !->
-        [statusCode, content] = args
+    send: (status-code, content) !->
         if not content
-            [statusCode, content] = [200, statusCode]
+            [status-code, content] = [200, status-code]
         cookie-acc = []
         for _, item of @_resp-cookies
             cookie-acc.push item
         @_resp-headers <<< do
             'Set-Cookie': cookie-acc
-        @resp.write-head statusCode, @_resp-headers
+        @resp.write-head status-code, @_resp-headers
         @resp.end content
 
-    json: (obj) !->
+    json: (status-code, obj) !->
+        if not obj
+            [status-code, obj] = [200, status-code]
         @set-header \Content-Type, 'application/json; charset=' + @_resp-charset
         try
             str = JSON.stringify obj
@@ -87,11 +88,13 @@ class Context
             error = 'response.json require a Object param can be stringified to string'
             logger.error error
             return
-        @send str
+        @send status-code, str
 
-    html: (str) !->
+    html: (status-code, str) !->
+        if not str
+            [status-code, str] = [200, status-code]
         @set-header \Content-Type, 'text/html; charset=' + @_resp-charset
-        @send str
+        @send status-code, str
 
     send-status: (status-code) !->
         @send status-code, that if status-map[status-code]
