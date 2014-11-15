@@ -10,7 +10,7 @@ npm install ove
 
 ## Example
 
-Use LiveScript:
+### Use LiveScript:
 
 ```js
 require! \ove
@@ -33,7 +33,7 @@ app.post \/user/create/ ->
 app.run!
 ```
 
-Use JavaScript:
+### Use JavaScript:
 
 ```js
 var ove = require('ove');
