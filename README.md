@@ -50,7 +50,7 @@ app.get('/', function() {
 
 app.get('/user/:uid/', function() {
     this.json({
-        uid: this.uid
+        uid: this.params.uid
     });
 });
 
