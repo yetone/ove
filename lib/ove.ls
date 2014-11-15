@@ -9,6 +9,7 @@ require! {
 class Ove
     ->
         @config = {}
+        @g = {}
         @middlewares = []
         @server = http.create-server!
         @router = new Router
@@ -42,6 +43,11 @@ class Ove
             @req.url .= replace self.static-re, ''
             self.static-server.serve @req, @resp
 
+    register-status: (status-code, handler) ->
+        if not @config.status-handler-map
+            @config.status-handler-map = {}
+        @config.status-handler-map[status-code] = handler
+
     listen: (...args) ->
         [port, host] = args
         if not port
@@ -53,7 +59,7 @@ class Ove
 
         do
             (req, resp) <- @server.on \request
-            ctx = new Context req, resp
+            ctx = new Context req, resp, self.config, self.g
             self.config.charset and ctx.set-charset self.config.charset
             if self.middlewares[0]
                 that.call ctx, -> self.router.route ctx

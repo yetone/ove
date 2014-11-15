@@ -10,9 +10,11 @@ status-map = do
     502: 'Server Error.'
 
 class Context
-    (req, resp, config) ->
+    (req, resp, config = {}, g = {}) ->
         @req = req
         @resp = resp
+        @config = config
+        @g = g
         url-obj = url.parse req.url
         @url = req.url
         @method = req.method
@@ -64,9 +66,43 @@ class Context
         @_resp-cookies[key] = header
 
     set-secure-cookie: (key, value, opt) !->
-        if config.cookie-secure-token
-            value = utils.encode-str that, value
+        opt = do
+            expires: 30
+        <<< opt
+        value = [value.length, utils.base64.encode(value), Date.now! + opt.expires * 60 * 60 * 24]
+        signature = utils.hex-hmac-sha1 value.join \|, @config.cookie-secure-token
+
+        value.push signature
+        value .= join \| .replace /\=/g \*
+
         @set-cookie key, value, opt
+
+    get-cookie: (key, dft) ->
+        @cookies[key] or dft
+
+    get-secure-cookie: (key, dft) ->
+        value = @cookies[key]
+        if not value
+            return dft
+
+        parts = value.replace /\*/g \= .split \|
+        if parts.length is not 4
+            return dft
+
+        [len, value, expires, signature] = parts
+        value = utils.base64.decode value .substr 0 len
+
+        if +expires < Date.now!
+            return dft
+
+        local-sig = utils.hex-hmac-sha1 (parts.slice 0 3 .join \|), @config.cookie-secure-token
+
+        if local-sig is not signature
+            logger.error 'invalid cookie signature: ' + key
+            return dft
+
+        value
+
 
     send: (status-code, content) !->
         if not content
@@ -103,6 +139,9 @@ class Context
         @resp.end!
 
     send-status: (status-code) !->
+        if @config.status-handler-map?[status-code]
+            that.call @
+            return
         @send status-code, that if status-map[status-code]
 
 exports.Context = Context

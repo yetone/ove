@@ -1,3 +1,5 @@
+require! \crypto
+
 module.exports = do
     query-str-to-obj: (str) ->
         res = {}
@@ -33,11 +35,14 @@ module.exports = do
             res[k.trim!] = v
         res
 
-    encode-str: (token, str) ->
-        #TODO
-        token + str
+    hex-hmac-sha1: (data, key = '*') ->
+        hmac = crypto.create-hmac \sha1 key
+        hmac.update data
+        hmac.digest \hex
 
-    decode-str: (token, str) ->
-        #TODO
-        str
+    base64: do
+        encode: (str) ->
+            (new Buffer str).to-string \base64
+        decode: (str) ->
+            (new Buffer str, \base64).to-string \utf8
 

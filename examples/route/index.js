@@ -12,15 +12,21 @@
     console.log('md1', this.url);
     return next();
   });
+  app.registerStatus(404, function(){
+    return this.send('ooooooooooooooh, noooooooooooooo!');
+  });
   app.get('/test/', function(){
     this.setCookie('love', 'you');
     console.log('cookies:', this.cookies, '\n');
     console.log('headers:', this.headers, '\n');
     console.log('ip:', this.ip, '\n');
+    this.setSecureCookie('miss', this.queryParams.miss || 'home');
     return this.send('hello world');
   });
   app.get('/user/:uid/', function(){
-    return this.send('hello ' + this.params.uid);
+    var cookie;
+    cookie = this.getSecureCookie('miss', 'nothing');
+    return this.send('hello ' + this.params.uid + ', miss ' + cookie);
   });
   app.get('/redirect/', function(){
     return this.redirect('/user/yetone/');
