@@ -11,7 +11,7 @@
     return next();
   }).registerStatus(404, function(){
     return this.send('ooooooooooooooh, noooooooooooooo!');
-  }).get('/test/', function(){
+  }).register('/test/', function(){
     this.setCookie('love', 'you');
     console.log('cookies:', this.cookies, '\n');
     console.log('headers:', this.headers, '\n');

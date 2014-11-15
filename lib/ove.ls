@@ -16,11 +16,20 @@ class Ove
         @server = http.create-server!
         @router = new Router
 
-        for name in <[ register get post put delete patch head options ]>
-            this[name] = @router[name]
+        self = @
+        for method in <[ GET POST PUT DELETE PATCH HEAD OPTIONS ]>
+            ((method) ->
+                self[method.to-lower-case!] = (...args) ->
+                    args.push([method])
+                    self.register.apply self, args
+            ) method
 
     config: (obj) ->
         @config <<< obj
+        @
+
+    register: (...args) ->
+        @router.register.apply @router, args
         @
 
     use: (func) ->

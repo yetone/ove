@@ -14,7 +14,7 @@ app.static \/public/ \./public
 .register-status 404 ->
     @send 'ooooooooooooooh, noooooooooooooo!'
 
-.get \/test/ ->
+.register \/test/ ->
     @set-cookie \love \you
     console.log \cookies:, @cookies, \\n
     console.log \headers:, @headers, \\n
