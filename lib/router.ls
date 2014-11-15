@@ -77,9 +77,9 @@ class Router
                 continue
             for name, idx in param-names
                 try
-                    ctx.params[name] = decodeURIComponent m-arr[++idx]
+                    ctx.params[name] = decodeURIComponent m-arr[idx + 1]
                 catch
-                    ctx.params[name] = m-arr[++idx]
+                    ctx.params[name] = m-arr[idx + 1]
             if ctx.req.method is \POST
                 do
                     <- ctx.req.on \end
