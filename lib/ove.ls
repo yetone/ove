@@ -16,7 +16,7 @@ class Ove
         @server = http.create-server!
         @router = new Router
 
-        for name in <[ register get post put delete patch ]>
+        for name in <[ register get post put delete patch head options ]>
             this[name] = @router[name]
 
     config: (obj) !->
