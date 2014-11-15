@@ -46,26 +46,7 @@ class Router
                 | _ =>
                     method-list = [\GET]
 
-            @handler-list.push [
-                pattern
-                handler
-                method-list
-            ]
-
-    route: (ctx) !->
-        self = @
-        if ctx.req.method is \POST
-            ctx.body = ''
-            do
-                data <- ctx.req.on \data
-                ctx.body += data
-        param-re = /:[^\/]+/g
-        pathname = url.parse ctx.req.url .pathname
-        pathname = if pathname.char-at(pathname.length - 1) is \/ then pathname else pathname + \/
-
-        matched = false
-        for item in @handler-list
-            [pattern, handler, method-list] = item
+            param-re = /:[^\/]+/g
             if pattern.replace /[\/\w:\*]/g ''
                 throw new Error 'The router pattern is error: ' + pattern
             param-names = if pattern.match param-re then that.map -> it.slice(1) else []
@@ -76,8 +57,29 @@ class Router
                 .replace /\*\*/g '.*'
                 .replace /\//g '\\/'
 
-            re = new RegExp pattern
-            m-arr = pathname.match re
+            pattern = new RegExp pattern
+
+            @handler-list.push [
+                pattern
+                handler
+                method-list
+                param-names
+            ]
+
+    route: (ctx) !->
+        self = @
+        if ctx.req.method is \POST
+            ctx.body = ''
+            do
+                data <- ctx.req.on \data
+                ctx.body += data
+        pathname = url.parse ctx.req.url .pathname
+        pathname = if pathname.char-at(pathname.length - 1) is \/ then pathname else pathname + \/
+
+        matched = false
+        for item in @handler-list
+            [pattern, handler, method-list, param-names] = item
+            m-arr = pathname.match pattern
             if not m-arr
                 continue
             matched = true
