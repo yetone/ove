@@ -89,5 +89,8 @@ class Ove
                 , host, port
         @
 
+    run: ->
+        @listen ...
+
 module.exports = ->
     new Ove ...

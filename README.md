@@ -27,5 +27,5 @@ app.get \/user/:uid/ ->
 app.post \/user/create/ ->
     @json @form
 
-app.listen 8888
+app.run!
 ```

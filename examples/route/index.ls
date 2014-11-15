@@ -34,4 +34,4 @@ app.static \/public/ \./public
     console.log @params
     @json @form
 
-.listen!
+.run!

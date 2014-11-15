@@ -28,5 +28,5 @@
     console.log(this.body);
     console.log(this.params);
     return this.json(this.form);
-  }).listen();
+  }).run();
 }).call(this);
