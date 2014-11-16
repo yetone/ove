@@ -22,5 +22,12 @@ gulp.task \build ->
 
 gulp.task \default ->
     gulp.run \build
-    gulp.watch [\src/*.ls \src/**/*.ls \test/*.ls \test/**/*.ls \gulpfile.ls] ->
+    gulp.watch [
+        \src/*.ls
+        \src/**/*.ls
+        \test/*.ls
+        \test/**/*.ls
+        \gulpfile.ls
+    ]
+    , ->
         gulp.run \build
