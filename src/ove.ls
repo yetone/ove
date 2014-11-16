@@ -33,8 +33,8 @@ class Ove
         @
 
     use: (func) ->
-        if typeof! func is not \Function
-            throw new Error 'ove.use() expect a Function argument'
+        unless typeof! func is \Function
+            return @register ...
         idx = @middlewares.length + 1
         self = @
         @middlewares.push (last) !->
@@ -87,10 +87,10 @@ class Ove
             logger.log "Ove app started.\n
                 Listening %s:%d"
                 , host, port
-        @
 
     run: ->
         @listen ...
+        @
 
 module.exports = ->
     new Ove ...
