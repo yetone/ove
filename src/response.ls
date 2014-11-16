@@ -41,7 +41,7 @@ exports.Response = do
         if opt.expires
             ex-date = new Date
             ex-date.set-date ex-date.get-date! + opt.expires
-            header += '; expires=' + ex-date.to-UTC-string!
+            header += '; expires=' + ex-date.to-GMT-string!
         if opt.domain
             header += '; domain' + opt.domain
         if opt.secure

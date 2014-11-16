@@ -84,6 +84,8 @@ class Router
                 do
                     <- ctx.req.on \end
                     ctx.form = utils.query-str-to-obj ctx.body
+                    try
+                        ctx.form = JSON.parse ctx.body
                     handler.call ctx
                 return
             handler.call ctx
