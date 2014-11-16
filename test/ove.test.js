@@ -194,7 +194,7 @@ describe('ove', function(){
       app = ove();
       agent = supertest.agent(app.listen());
       app.register('/get/:id', function(){
-        return this.send('I am in /get/' + this.params.id);
+        return this.send('I am in /get/' + this.params.id + ', queryParams.name: ' + this.queryParams.name + ', queryParams.age: ' + this.queryParams.age);
       });
       app.register('/post/:id', function(){
         return this.send('I am in /post/' + this.params.id + ', a: ' + this.form.a);
@@ -202,9 +202,9 @@ describe('ove', function(){
       app.register('/put/:id', function(){
         return this.send('I am in /put/' + this.params.id);
       }, ['put', 'options']);
-      it('GET /get/world', function(done){
-        return agent.get('/get/world').end(function(err, resp){
-          resp.text.should.be.equal('I am in /get/world');
+      it('GET /get/world?name=yetone&age=13', function(done){
+        return agent.get('/get/world?name=yetone&age=13').end(function(err, resp){
+          resp.text.should.be.equal('I am in /get/world, queryParams.name: yetone, queryParams.age: 13');
           return done(err);
         });
       });

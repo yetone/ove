@@ -190,7 +190,7 @@ describe \ove ->
             app.register do
                 \/get/:id
                 ->
-                    @send 'I am in /get/' + @params.id
+                    @send 'I am in /get/' + @params.id + ', queryParams.name: ' + @query-params.name + ', queryParams.age: ' + @query-params.age
 
             app.register do
                 \/post/:id
@@ -204,10 +204,10 @@ describe \ove ->
                     @send 'I am in /put/' + @params.id
                 <[ put options ]>
 
-            it 'GET /get/world' (done) ->
-                agent.get \/get/world
+            it 'GET /get/world?name=yetone&age=13' (done) ->
+                agent.get \/get/world?name=yetone&age=13
                     .end (err, resp) ->
-                        resp.text.should.be.equal 'I am in /get/world'
+                        resp.text.should.be.equal 'I am in /get/world, queryParams.name: yetone, queryParams.age: 13'
                         done err
 
             it 'POST /post/world' (done) ->
