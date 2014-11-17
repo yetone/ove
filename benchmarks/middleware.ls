@@ -8,7 +8,7 @@ while n--
     app.use (next) ->
         next!
 
-body = new Buffer 'Hello ove'
+body = new Buffer 'Hello World'
 
 app.use (next) ->
     next!

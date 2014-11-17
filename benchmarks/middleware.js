@@ -8,7 +8,7 @@
   while (n--) {
     app.use(fn$);
   }
-  body = new Buffer('Hello ove');
+  body = new Buffer('Hello World');
   app.use(function(next){
     next();
     return this.body = body;
