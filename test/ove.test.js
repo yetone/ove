@@ -202,6 +202,9 @@ describe('ove', function(){
       app.register('/put/:id', function(){
         return this.send('I am in /put/' + this.params.id);
       }, ['put', 'options']);
+      app.register('/user/:uid', function(){
+        return this.send(this.pathname);
+      }, 'get');
       it('GET /get/world?name=yetone&age=13', function(done){
         return agent.get('/get/world?name=yetone&age=13').end(function(err, resp){
           resp.text.should.be.equal('I am in /get/world, queryParams.name: yetone, queryParams.age: 13');
@@ -216,9 +219,15 @@ describe('ove', function(){
           return done(err);
         });
       });
-      return it('PUT /put/world', function(done){
+      it('PUT /put/world', function(done){
         return agent.put('/put/world').end(function(err, resp){
           resp.text.should.be.equal('I am in /put/world');
+          return done(err);
+        });
+      });
+      return it('GET /user/yetone', function(done){
+        return agent.get('/user/yetone').end(function(err, resp){
+          resp.text.should.be.equal('/user/yetone');
           return done(err);
         });
       });

@@ -204,6 +204,12 @@ describe \ove ->
                     @send 'I am in /put/' + @params.id
                 <[ put options ]>
 
+            app.register do
+                \/user/:uid
+                ->
+                    @send @pathname
+                \get
+
             it 'GET /get/world?name=yetone&age=13' (done) ->
                 agent.get \/get/world?name=yetone&age=13
                     .end (err, resp) ->
@@ -221,6 +227,12 @@ describe \ove ->
                 agent.put \/put/world
                     .end (err, resp) ->
                         resp.text.should.be.equal 'I am in /put/world'
+                        done err
+
+            it 'GET /user/yetone' (done) ->
+                agent.get \/user/yetone
+                    .end (err, resp) ->
+                        resp.text.should.be.equal \/user/yetone
                         done err
 
     describe \.( + method-list.join(\|) + \), (_) ->

@@ -49,3 +49,19 @@ module.exports = do
         decode: (str) ->
             (new Buffer str, \base64).to-string \utf8
 
+    def-protected: (obj, key, val, enumerable, writable) !->
+        Object.define-property obj, key, do
+            value: val
+            enumerable: enumerable
+            writable: writable
+            configurable: true
+
+    make-protected: (obj) !->
+        descs = {}
+        for own key, val of obj
+            descs[key] = do
+                value: val
+                configurable: true
+
+        Object.define-properties obj, descs
+
