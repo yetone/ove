@@ -1,6 +1,6 @@
 require! \crypto
 
-module.exports = do
+module.exports =
     query-str-to-obj: (str) ->
         res = {}
         if typeof! str is not \String
@@ -59,9 +59,9 @@ module.exports = do
     make-protected: (obj) !->
         descs = {}
         for own key, val of obj
-            descs[key] = do
+            descs[key] =
                 value: val
-                configurable: true
+                +configurable
 
         Object.define-properties obj, descs
 

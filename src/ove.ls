@@ -8,7 +8,7 @@ require! {
 
 class Ove
     ->
-        @config = do
+        @config =
             cookie-expires: 30
             cookie-secure-token: \ove
         @g = {}

@@ -1,4 +1,5 @@
-module.exports = do
+# TODO
+module.exports =
     log: ->
         console.log ...
 

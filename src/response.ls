@@ -3,12 +3,12 @@ require! {
     \./utils
 }
 
-status-map = do
+status-map =
     404: 'Not found.'
     405: 'Method not allowed.'
     502: 'Server Error.'
 
-exports.Response = do
+exports.Response =
     set-charset: (@_resp-charset) !->
 
     set-header: (key, value) !->
@@ -19,7 +19,7 @@ exports.Response = do
         @_resp-headers <<< obj
 
     set-cookie: (key, value, opt) !->
-        dft = do
+        dft =
             path: \/
             expires: @config.cookie-expires
             domain: undefined

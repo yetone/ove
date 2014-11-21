@@ -3,7 +3,7 @@ require! {
     \./utils
 }
 
-exports.Request = do
+exports.Request =
     get-cookie: (key, dft) ->
         @cookies[key] or dft
 
