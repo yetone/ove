@@ -1,6 +1,21 @@
 require! \crypto
 
+attach-pathname = (str, prefix = \/) ->
+    unless prefix.char-at(0) is \/
+        prefix = \/ + prefix
+    unless prefix.char-at(prefix.length - 1) is \/
+        prefix += \/
+    if str.char-at(0) is \/
+        str = str.slice 1
+    unless str.char-at(str.length - 1) is \/
+        str += \/
+
+    prefix + str
+
+method-list = <[ GET POST PUT DELETE PATCH HEAD OPTIONS ]>
+
 module.exports =
+    method-list: method-list
     query-str-to-obj: (str) ->
         res = {}
         if typeof! str is not \String
@@ -65,3 +80,32 @@ module.exports =
 
         Object.define-properties obj, descs
 
+    get-pattern-list: (obj) ->
+        acc = []
+        _p = (prefix, obj) ->
+            switch typeof! obj
+                | \Object =>
+                    _parse-router-obj prefix, obj
+                | \Function =>
+                    acc.push [
+                        prefix
+                        obj
+                        <[ GET ]>
+                    ]
+
+        _parse-router-obj = (prefix, obj) ->
+            for key, value of obj
+                if key.to-upper-case! in method-list
+                    prefix = attach-pathname prefix
+                    acc.push [
+                        prefix
+                        value
+                        [key.to-upper-case!]
+                    ]
+                    continue
+                _p attach-pathname(key, prefix), value
+
+        for key, value of obj
+            _p attach-pathname(key), value
+
+        acc

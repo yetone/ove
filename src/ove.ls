@@ -2,6 +2,7 @@ require! {
     http
     './router': {Router}
     './context': {Context}
+    \./utils
     \./logger
     \node-static
 }
@@ -16,7 +17,7 @@ class Ove
         @router = new Router
 
         self = @
-        for method in <[ GET POST PUT DELETE PATCH HEAD OPTIONS ]>
+        for method in utils.method-list
             ((method) ->
                 self[method.to-lower-case!] = (...args) ->
                     args.push([method])

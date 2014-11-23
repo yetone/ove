@@ -77,6 +77,135 @@ describe('ove', function(){
     });
   });
   describe('.register', function(_){
+    describe('should work with object', function(_){
+      var app, agent;
+      app = ove();
+      agent = supertest.agent(app.listen());
+      app.register({
+        '/api': {
+          '/user': {
+            get: function(){
+              return this.send('GET /api/user/');
+            },
+            '/get': function(){
+              return this.send('GET /api/user/get/');
+            },
+            '/name': {
+              put: function(){
+                return this.send('PUT /api/user/name/');
+              },
+              post: function(){
+                return this.send('POST /api/user/name/');
+              },
+              change: function(){
+                return this.send('GET /api/user/name/change/');
+              }
+            }
+          },
+          '/other': {
+            get: function(){
+              return this.send('GET /api/other/');
+            },
+            '/get': function(){
+              return this.send('GET /api/other/get/');
+            },
+            '/name': {
+              put: function(){
+                return this.send('PUT /api/other/name/');
+              },
+              post: function(){
+                return this.send('POST /api/other/name/');
+              },
+              change: function(){
+                return this.send('GET /api/other/name/change/');
+              }
+            }
+          }
+        },
+        '/api0': {
+          '/user': {
+            get: function(){
+              return this.send('GET /api0/user/');
+            },
+            '/get': function(){
+              return this.send('GET /api0/user/get/');
+            },
+            '/name': {
+              put: function(){
+                return this.send('PUT /api0/user/name/');
+              },
+              post: function(){
+                return this.send('POST /api0/user/name/');
+              },
+              change: function(){
+                return this.send('GET /api0/user/name/change/');
+              }
+            }
+          },
+          '/other': {
+            get: function(){
+              return this.send('GET /api0/other/');
+            },
+            '/get': function(){
+              return this.send('GET /api0/other/get/');
+            },
+            '/name': {
+              put: function(){
+                return this.send('PUT /api0/other/name/');
+              },
+              post: function(){
+                return this.send('POST /api0/other/name/');
+              },
+              change: function(){
+                return this.send('GET /api0/other/name/change/');
+              }
+            }
+          }
+        }
+      });
+      it('GET /api/user/', function(done){
+        return agent.get('/api/user/').end(function(err, resp){
+          resp.text.should.be.equal('GET /api/user/');
+          return done(err);
+        });
+      });
+      it('GET /api/user/name/', function(done){
+        return agent.get('/api/user/name/').end(function(err, resp){
+          resp.text.should.be.equal('Method not allowed.');
+          return done(err);
+        });
+      });
+      it('GET /api0/user/get/', function(done){
+        return agent.get('/api0/user/get/').end(function(err, resp){
+          resp.text.should.be.equal('GET /api0/user/get/');
+          return done(err);
+        });
+      });
+      it('PUT /api0/user/name/', function(done){
+        return agent.put('/api0/user/name/').end(function(err, resp){
+          resp.text.should.be.equal('PUT /api0/user/name/');
+          return done(err);
+        });
+      });
+      it('POST /api0/user/name/', function(done){
+        return agent.post('/api0/user/name/').end(function(err, resp){
+          resp.text.should.be.equal('POST /api0/user/name/');
+          return done(err);
+        });
+      });
+      it('GET /api0/user/name/change/', function(done){
+        return agent.get('/api0/user/name/change').end(function(err, resp){
+          resp.text.should.be.equal('GET /api0/user/name/change/');
+          return done(err);
+        });
+      });
+      return it('GET /api0/other/', function(done){
+        return agent.get('/api0/other/').end(function(err, resp){
+          resp.text.should.be.equal('GET /api0/other/');
+          return done(err);
+        });
+      });
+    });
     describe('should work with multi handler list', function(_){
       var app, agent, handlerList, i$, ref$, len$, method, results$ = [];
       app = ove();

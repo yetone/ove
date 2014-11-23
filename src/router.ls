@@ -4,10 +4,6 @@ require! {
     \./utils
 }
 
-get-pattern-list = ->
-    # TODO
-    []
-
 class Router
     ->
         @handler-list = []
@@ -16,7 +12,7 @@ class Router
         arr = []
         switch typeof! pattern
             | \Array => arr = pattern
-            | \Object => arr = get-pattern-list pattern
+            | \Object => arr = utils.get-pattern-list pattern
             | _ =>
                 arr.push [
                     pattern

@@ -75,6 +75,103 @@ describe \ove ->
                         done err
 
     describe \.register (_) ->
+        describe 'should work with object' (_) ->
+            app = ove!
+            agent = supertest.agent app.listen!
+            app.register do
+                '/api':
+                    '/user':
+                        get: ->
+                            @send 'GET /api/user/'
+                        '/get': ->
+                            @send 'GET /api/user/get/'
+                        '/name':
+                            put: ->
+                                @send 'PUT /api/user/name/'
+                            post: ->
+                                @send 'POST /api/user/name/'
+                            change: ->
+                                @send 'GET /api/user/name/change/'
+                    '/other':
+                        get: ->
+                            @send 'GET /api/other/'
+                        '/get': ->
+                            @send 'GET /api/other/get/'
+                        '/name':
+                            put: ->
+                                @send 'PUT /api/other/name/'
+                            post: ->
+                                @send 'POST /api/other/name/'
+                            change: ->
+                                @send 'GET /api/other/name/change/'
+                '/api0':
+                    '/user':
+                        get: ->
+                            @send 'GET /api0/user/'
+                        '/get': ->
+                            @send 'GET /api0/user/get/'
+                        '/name':
+                            put: ->
+                                @send 'PUT /api0/user/name/'
+                            post: ->
+                                @send 'POST /api0/user/name/'
+                            change: ->
+                                @send 'GET /api0/user/name/change/'
+                    '/other':
+                        get: ->
+                            @send 'GET /api0/other/'
+                        '/get': ->
+                            @send 'GET /api0/other/get/'
+                        '/name':
+                            put: ->
+                                @send 'PUT /api0/other/name/'
+                            post: ->
+                                @send 'POST /api0/other/name/'
+                            change: ->
+                                @send 'GET /api0/other/name/change/'
+
+            it 'GET /api/user/' (done) ->
+                agent.get \/api/user/
+                    .end (err, resp) ->
+                        resp.text.should.be.equal 'GET /api/user/'
+                        done err
+
+            it 'GET /api/user/name/' (done) ->
+                agent.get \/api/user/name/
+                    .end (err, resp) ->
+                        resp.text.should.be.equal 'Method not allowed.'
+                        done err
+
+            it 'GET /api0/user/get/' (done) ->
+                agent.get \/api0/user/get/
+                    .end (err, resp) ->
+                        resp.text.should.be.equal 'GET /api0/user/get/'
+                        done err
+
+            it 'PUT /api0/user/name/' (done) ->
+                agent.put \/api0/user/name/
+                    .end (err, resp) ->
+                        resp.text.should.be.equal 'PUT /api0/user/name/'
+                        done err
+
+            it 'POST /api0/user/name/' (done) ->
+                agent.post \/api0/user/name/
+                    .end (err, resp) ->
+                        resp.text.should.be.equal 'POST /api0/user/name/'
+                        done err
+
+            it 'GET /api0/user/name/change/' (done) ->
+                agent.get \/api0/user/name/change
+                    .end (err, resp) ->
+                        resp.text.should.be.equal 'GET /api0/user/name/change/'
+                        done err
+
+            it 'GET /api0/other/' (done) ->
+                agent.get \/api0/other/
+                    .end (err, resp) ->
+                        resp.text.should.be.equal 'GET /api0/other/'
+                        done err
+
         describe 'should work with multi handler list' (_) ->
             app = ove!
             agent = supertest.agent app.listen!
