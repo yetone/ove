@@ -1,0 +1,11 @@
+language: node_js
+
+node_js: "7"
+
+before_install:
+  - npm install -g LiveScript
+
+before_script:
+  - npm install -g gulp
+
+script: gulp
