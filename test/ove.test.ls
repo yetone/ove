@@ -2,13 +2,14 @@ require! <[ supertest chai ]>
 chai.should!
 chai.config.includeStack = true
 ove = require '..'
+port = 8080
 
 describe \ove ->
     method-list = <[ get post put delete patch options ]>
     describe \.use (_) ->
         it 'should work with single func' (done) ->
             app = ove!
-            agent = supertest.agent app.listen!
+            agent = supertest.agent app.listen port++
 
             app.use ->
                 @send 'response content'
@@ -21,7 +22,7 @@ describe \ove ->
 
         it 'should work with multi func' (done) ->
             app = ove!
-            agent = supertest.agent app.listen!
+            agent = supertest.agent app.listen port++
 
             func-list = []
 
@@ -47,7 +48,7 @@ describe \ove ->
 
         describe 'should work with router' (_) ->
             app = ove!
-            agent = supertest.agent app.listen!
+            agent = supertest.agent app.listen port++
 
             app.use \/home ->
                 @send \home
@@ -77,7 +78,7 @@ describe \ove ->
     describe \.register (_) ->
         describe 'should work with object' (_) ->
             app = ove!
-            agent = supertest.agent app.listen!
+            agent = supertest.agent app.listen port++
             app.register do
                 '/api':
                     '/user':
@@ -174,7 +175,7 @@ describe \ove ->
 
         describe 'should work with multi handler list' (_) ->
             app = ove!
-            agent = supertest.agent app.listen!
+            agent = supertest.agent app.listen port++
 
             handler-list = [
                 * \/
@@ -282,7 +283,7 @@ describe \ove ->
 
         describe 'should work with single handler' (_) ->
             app = ove!
-            agent = supertest.agent app.listen!
+            agent = supertest.agent app.listen port++
 
             app.register do
                 \/get/:id
@@ -334,7 +335,7 @@ describe \ove ->
 
     describe \.( + method-list.join(\|) + \), (_) ->
         app = ove!
-        agent = supertest.agent app.listen!
+        agent = supertest.agent app.listen port++
         for method in method-list
             ((method) ->
                 app[method] \/app/ + method, ->
