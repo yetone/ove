@@ -1,9 +1,10 @@
-var supertest, chai, ove;
+var supertest, chai, ove, port;
 supertest = require('supertest');
 chai = require('chai');
 chai.should();
 chai.config.includeStack = true;
 ove = require('..');
+port = 8080;
 describe('ove', function(){
   var methodList;
   methodList = ['get', 'post', 'put', 'delete', 'patch', 'options'];
@@ -11,7 +12,7 @@ describe('ove', function(){
     it('should work with single func', function(done){
       var app, agent;
       app = ove();
-      agent = supertest.agent(app.listen());
+      agent = supertest.agent(app.listen(port++));
       app.use(function(it){
         this.send('response content');
         return it();
@@ -24,7 +25,7 @@ describe('ove', function(){
     it('should work with multi func', function(done){
       var app, agent, funcList;
       app = ove();
-      agent = supertest.agent(app.listen());
+      agent = supertest.agent(app.listen(port++));
       funcList = [];
       app.use(function(it){
         funcList.push('func1');
@@ -49,7 +50,7 @@ describe('ove', function(){
     return describe('should work with router', function(_){
       var app, agent;
       app = ove();
-      agent = supertest.agent(app.listen());
+      agent = supertest.agent(app.listen(port++));
       app.use('/home', function(){
         return this.send('home');
       });
@@ -80,7 +81,7 @@ describe('ove', function(){
     describe('should work with object', function(_){
       var app, agent;
       app = ove();
-      agent = supertest.agent(app.listen());
+      agent = supertest.agent(app.listen(port++));
       app.register({
         '/api': {
           '/user': {
@@ -209,7 +210,7 @@ describe('ove', function(){
     describe('should work with multi handler list', function(_){
       var app, agent, handlerList, i$, ref$, len$, method, results$ = [];
       app = ove();
-      agent = supertest.agent(app.listen());
+      agent = supertest.agent(app.listen(port++));
       handlerList = [
         [
           '/', function(){
@@ -321,7 +322,7 @@ describe('ove', function(){
     return describe('should work with single handler', function(_){
       var app, agent;
       app = ove();
-      agent = supertest.agent(app.listen());
+      agent = supertest.agent(app.listen(port++));
       app.register('/get/:id', function(){
         return this.send('I am in /get/' + this.params.id + ', queryParams.name: ' + this.queryParams.name + ', queryParams.age: ' + this.queryParams.age);
       });
@@ -365,7 +366,7 @@ describe('ove', function(){
   return describe('.(' + methodList.join('|') + ')', function(_){
     var app, agent, i$, ref$, len$, method, results$ = [];
     app = ove();
-    agent = supertest.agent(app.listen());
+    agent = supertest.agent(app.listen(port++));
     for (i$ = 0, len$ = (ref$ = methodList).length; i$ < len$; ++i$) {
       method = ref$[i$];
       fn$(method);
